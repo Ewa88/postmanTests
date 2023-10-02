@@ -1,0 +1,596 @@
+{
+	"info": {
+		"_postman_id": "6c5cd9db-c2f4-4625-aaaf-88a1cdcbb915",
+		"name": "jsonplaceholder GETs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9204152"
+	},
+	"item": [
+		{
+			"name": "Get100Posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should check time of response\", function(){\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+							"})\r",
+							"pm.test(\"should check respopnse status\", function(){\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.property('status', 'OK')\r",
+							"})\r",
+							"pm.test(\"should check if response body is not null\", function(){\r",
+							"    pm.expect(pm.response.json()).not.to.be.empty\r",
+							"});\r",
+							"pm.test(\"should check if number of elements is equal 100\", function(){\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var expectedItemCount = 100;\r",
+							" pm.expect(jsonData.length).to.eql(expectedItemCount)\r",
+							" });\r",
+							" pm.test(\"should check if all elements have correct parts\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    jsonData.forEach(function (element) {\r",
+							"        pm.expect(element).to.have.property(\"userId\");\r",
+							"        pm.expect(element).to.have.property(\"id\");\r",
+							"        pm.expect(element).to.have.property(\"title\");\r",
+							"        pm.expect(element).to.have.property(\"body\");\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}posts",
+					"host": [
+						"{{host}}posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSinglePost",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let myResponseBody = pm.response.json();\r",
+							"pm.collectionVariables.set('originalUserIDFromGET', myResponseBody.userId);\r",
+							"pm.collectionVariables.set('originalTitleFromGET', myResponseBody.title);\r",
+							"pm.collectionVariables.set('originalBodyFromGET', myResponseBody.body);\r",
+							"\r",
+							"\r",
+							"pm.test(\"should check time of response\", function(){\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+							"})\r",
+							"pm.test(\"should check respopnse status\", function(){\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.property('status', 'OK')\r",
+							"})\r",
+							"pm.test(\"should check if response body is not null\", function(){\r",
+							"    pm.expect(pm.response.json()).not.to.be.empty\r",
+							"});\r",
+							"\r",
+							" pm.test(\"should check if all elements are present in response body\", function() {\r",
+							"  var responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody).to.have.property(\"userId\");\r",
+							"    pm.expect(responseBody).to.have.property(\"id\");\r",
+							"    pm.expect(responseBody).to.have.property(\"title\");\r",
+							"    pm.expect(responseBody).to.have.property(\"body\");\r",
+							"   \r",
+							"});\r",
+							"\r",
+							"pm.test(\"should check if correct element is returned\", function() {\r",
+							"  var responseBody = pm.response.json();\r",
+							"   var postID = parseInt(pm.collectionVariables.get(\"singlePostID\"), 10);\r",
+							"    pm.expect(responseBody.id).to.be.equal(postID);  \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}posts/{{singlePostID}}",
+					"host": [
+						"{{host}}posts"
+					],
+					"path": [
+						"{{singlePostID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get not existed Post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should check time of response\", function(){\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+							"})\r",
+							"pm.test(\"should check respopnse status\", function(){\r",
+							"    pm.response.to.have.status(404)\r",
+							"    pm.response.to.have.property('status', 'Not Found')\r",
+							"})\r",
+							"pm.test(\"should check if response body is null\", function(){\r",
+							"    pm.expect(pm.response.json()).to.be.empty\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}posts/120",
+					"host": [
+						"{{host}}posts"
+					],
+					"path": [
+						"120"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add single post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//if added post ID could be reused in next step of the collection I have a possibility to store this value\r",
+							"let myResponseBody = pm.response.json();\r",
+							"pm.collectionVariables.set(\"addedPostID\", myResponseBody.id);\r",
+							"\r",
+							"pm.test(\"should check response time\", function(){\r",
+							"pm.expect(pm.response.responseTime).to.be.below(2000)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response status\", function(){\r",
+							"    pm.response.to.have.status(201);\r",
+							"    pm.response.to.have.property('status', 'Created')   \r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response elements\", function(){\r",
+							"    pm.expect(myResponseBody).to.have.property('id');\r",
+							"    pm.expect(myResponseBody).to.have.property('userId');\r",
+							"    pm.expect(myResponseBody).to.have.property('title');\r",
+							"    pm.expect(myResponseBody).to.have.property('body')\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the user id value in response elements\", function(){\r",
+							"    var expectedUserID = parseInt(pm.collectionVariables.get('userID'));\r",
+							"    pm.expect(myResponseBody.userId).to.be.equal(expectedUserID)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the title value in respone elements\", function(){\r",
+							"    var expectedTitle = pm.collectionVariables.get('addedPostTitle');\r",
+							"    pm.expect(myResponseBody.title).to.be.equal(expectedTitle)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the body in response elements\", function(){\r",
+							"    var expectedBody = pm.collectionVariables.get('addedPostBody');\r",
+							"    pm.expect(myResponseBody.body).to.be.equal(expectedBody)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": {{userID}},\r\n    \"title\": \"{{addedPostTitle}}\",\r\n    \"body\": \"{{addedPostBody}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}posts",
+					"host": [
+						"{{host}}posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPostComments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should check responde time\", function(){\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response status\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.have.property('status', 'OK')\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response elements\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    myResponseBody.forEach(function(element){\r",
+							"        pm.expect(element).to.have.property('postId');\r",
+							"        pm.expect(element).to.have.property('id');\r",
+							"        pm.expect(element).to.have.property('name');\r",
+							"        pm.expect(element).to.have.property('email');\r",
+							"        pm.expect(element).to.have.property('body')\r",
+							"    });\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}posts/1/comments",
+					"host": [
+						"{{host}}posts"
+					],
+					"path": [
+						"1",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT single post(allData)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should check response time\", function(){\r",
+							"pm.expect(pm.response.responseTime).to.be.below(400);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response status\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.have.property('status', 'OK')\r",
+							"    \r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response body\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    pm.expect(myResponseBody).to.have.property('userId');\r",
+							"    pm.expect(myResponseBody).to.have.property('title');\r",
+							"    pm.expect(myResponseBody).to.have.property('body');\r",
+							"    pm.expect(myResponseBody).to.have.property('id')\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the user id value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredUserID =parseInt(pm.collectionVariables.get('putUserID'));\r",
+							"    pm.expect(myResponseBody.userId).to.be.equal(requiredUserID)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the title value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredtitle =pm.collectionVariables.get('putPostTitle');\r",
+							"    pm.expect(myResponseBody.title).to.be.equal(requiredtitle)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the body value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredBody =pm.collectionVariables.get('putPostBody');\r",
+							"    pm.expect(myResponseBody.body).to.be.equal(requiredBody)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the id value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredID =parseInt(pm.collectionVariables.get('singlePostID'));\r",
+							"    pm.expect(myResponseBody.id).to.be.equal(requiredID)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": {{putUserID}},\r\n    \"title\": \"{{putPostTitle}}\",\r\n    \"body\": \"{{putPostBody}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}posts/{{singlePostID}}",
+					"host": [
+						"{{host}}posts"
+					],
+					"path": [
+						"{{singlePostID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH single post(only Title)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should check response time\", function(){\r",
+							"pm.expect(pm.response.responseTime).to.be.below(400);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response status\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.have.property('status', 'OK')\r",
+							"    \r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response body\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    pm.expect(myResponseBody).to.have.property('userId');\r",
+							"    pm.expect(myResponseBody).to.have.property('title');\r",
+							"    pm.expect(myResponseBody).to.have.property('body');\r",
+							"    pm.expect(myResponseBody).to.have.property('id')\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the user id value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredUserID =parseInt(pm.collectionVariables.get('originalUserIDFromGET'));\r",
+							"    pm.expect(myResponseBody.userId).to.be.equal(requiredUserID)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the title value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredtitle =pm.collectionVariables.get('putPostTitle');\r",
+							"    pm.expect(myResponseBody.title).to.be.equal(requiredtitle)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the body value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredBody =pm.collectionVariables.get('originalBodyFromGET');\r",
+							"    pm.expect(myResponseBody.body).to.be.equal(requiredBody)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the id value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredID =parseInt(pm.collectionVariables.get('singlePostID'));\r",
+							"    pm.expect(myResponseBody.id).to.be.equal(requiredID)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"{{putPostTitle}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}posts/{{singlePostID}}",
+					"host": [
+						"{{host}}posts"
+					],
+					"path": [
+						"{{singlePostID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH single post(only Body)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"should check response time\", function(){\r",
+							"pm.expect(pm.response.responseTime).to.be.below(400);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response status\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.have.property('status', 'OK')\r",
+							"    \r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check response body\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    pm.expect(myResponseBody).to.have.property('userId');\r",
+							"    pm.expect(myResponseBody).to.have.property('title');\r",
+							"    pm.expect(myResponseBody).to.have.property('body');\r",
+							"    pm.expect(myResponseBody).to.have.property('id')\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the user id value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredUserID =parseInt(pm.collectionVariables.get('originalUserIDFromGET'));\r",
+							"    pm.expect(myResponseBody.userId).to.be.equal(requiredUserID)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the title value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredtitle =pm.collectionVariables.get('originalTitleFromGET');\r",
+							"    pm.expect(myResponseBody.title).to.be.equal(requiredtitle)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the body value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredBody =pm.collectionVariables.get('putPostBody');\r",
+							"    pm.expect(myResponseBody.body).to.be.equal(requiredBody)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"should check correctness of the id value\", function(){\r",
+							"    var myResponseBody = pm.response.json();\r",
+							"    var requiredID =parseInt(pm.collectionVariables.get('singlePostID'));\r",
+							"    pm.expect(myResponseBody.id).to.be.equal(requiredID)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"body\": \"{{putPostBody}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}posts/{{singlePostID}}",
+					"host": [
+						"{{host}}posts"
+					],
+					"path": [
+						"{{singlePostID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "singlePostID",
+			"value": "10",
+			"type": "string"
+		},
+		{
+			"key": "addedPostID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "addedPostTitle",
+			"value": "title",
+			"type": "string"
+		},
+		{
+			"key": "addedPostBody",
+			"value": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+			"type": "string"
+		},
+		{
+			"key": "userID",
+			"value": "2",
+			"type": "string"
+		},
+		{
+			"key": "putUserID",
+			"value": "5",
+			"type": "string"
+		},
+		{
+			"key": "putPostTitle",
+			"value": "put post title",
+			"type": "string"
+		},
+		{
+			"key": "putPostBody",
+			"value": "After put Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+			"type": "string"
+		},
+		{
+			"key": "originalBodyFromGET",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "originalUserIDFromGET",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "originalTitleFromGET",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
